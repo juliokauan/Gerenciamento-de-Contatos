@@ -30,6 +30,28 @@ No* criarNo(char *nome, char *telefone, char *email){
     return novo;
 }
 
+No* buscar(No *raiz, char *nome) {
+
+    if (raiz == NULL) {
+        return NULL;
+    }
+
+    // Verifica se encontrou o contato
+    if (strcmp(raiz->nome, nome) == 0) {
+        return raiz;
+    }
+
+    // Procura na esquerda
+    No *resultado = buscar(raiz->esquerda, nome);
+
+    if (resultado != NULL) {
+        return resultado;
+    }
+
+    // Procura na direita
+    return buscar(raiz->direita, nome);
+}
+
 int main(){
     setlocale(LC_ALL, "Portuguese");
     printf("Olá, Mundo!");
