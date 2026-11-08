@@ -66,4 +66,41 @@ Realiza uma busca **recursiva** na árvore pelo contato com o nome informado. A 
 
 Retorna:
 - Ponteiro para o `No` encontrado, se existir.
+
+---
+
+### `listarContatos`
+
+```c
+void listarContatos(No *raiz);
+```
+
+Exibe todos os contatos da árvore em **ordem alfabética** de nome, com nome, telefone e e-mail. Utiliza `listarEmOrdem` para percorrer a árvore.
+
+Retorna:
+- Nada (`void`). Os contatos são exibidos na tela, um por linha, após o cabeçalho `=== Contatos em ordem alfabetica ===`.
+- Se a árvore estiver vazia, exibe a mensagem `Nenhum contato cadastrado.`
+- A árvore não é modificada, apenas lida.
+
+---
+
+### `listarEmOrdem`
+
+```c
+void listarEmOrdem(No *raiz);
+```
+
+Percorre a árvore de forma **recursiva**, em ordem: primeiro a subárvore esquerda, depois o nó atual, cujos dados são exibidos, e por fim a subárvore direita. Como a árvore é organizada pelo nome, os contatos são exibidos em ordem alfabética.
+
+Retorna:
+- Nada (`void`). Cada contato visitado é exibido na tela no formato `Nome: <nome> | Telefone: <telefone> | E-mail: <email>`.
+- Se `raiz` for `NULL`, a função encerra sem exibir nada.
+
+
+
+
+
+
+
+
 - `NULL` se o contato não for encontrado.
