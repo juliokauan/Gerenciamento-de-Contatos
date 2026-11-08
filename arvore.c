@@ -52,6 +52,28 @@ No* buscar(No *raiz, char *nome) {
     return buscar(raiz->direita, nome);
 }
 
+/* LISTAGEM */
+/* percorre a arvore em ordem: esquerda -> no -> direita */
+void listarEmOrdem(No *raiz){
+    if (raiz == NULL){
+        return; 
+    }
+    listarEmOrdem(raiz->esquerda);
+    printf("Nome: %s | Telefone: %s | E-mail: %s\n",
+           raiz->nome, raiz->telefone, raiz->email);
+    listarEmOrdem(raiz->direita);
+}
+
+/* funcao da listagem */
+void listarContatos(No *raiz){
+    if (raiz == NULL){
+        printf("Nenhum contato cadastrado.\n");
+        return;
+    }
+    printf("=== Contatos em ordem alfabetica ===\n");
+    listarEmOrdem(raiz);
+}
+
 int main(){
     setlocale(LC_ALL, "Portuguese");
     printf("Olá, Mundo!");
