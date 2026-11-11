@@ -3,6 +3,7 @@
 #include <locale.h>
 #include <string.h>
 #include <windows.h>
+#include <ctype.h>
 
 typedef struct No
 {
@@ -16,6 +17,10 @@ typedef struct No
 void resposta(char *mensagem);
 void copiarTexto(char *destino, char *origem, size_t tamanho);
 void lerTexto(char *mensagem, char *destino, size_t tamanho);
+int validarTelefone(char *telefone);
+int validarEmail(char *email);
+void lerTelefone(char *destino, size_t tamanho);
+void lerEmail(char *destino, size_t tamanho);
 No *criarNo(char *nome, char *telefone, char *email);
 No *inserir(No *raiz, char *nome, char *telefone, char *email);
 No *buscar(No *raiz, char *nome);
@@ -35,7 +40,7 @@ int main()
     do
     {
         printf("====== Sistema de Gerenciamento de Contatos ======\n\n1 - Inserir contato\n2 - Buscar contato\n3 - Remover contato\n4 - Listar contatos\n5 - Sair do programa\n\n");
-        lerTexto("Opï¿½ï¿½o: ", opcao, sizeof(opcao));
+        lerTexto("Opção: ", opcao, sizeof(opcao));
         escolha = atoi(opcao);
         switch (escolha)
         {
@@ -44,16 +49,16 @@ int main()
             lerTexto("Digite o nome do contato: ", nome, sizeof(nome));
             if (nome[0] == '\0')
             {
-                resposta("O nome nï¿½o pode ser vazio.\n");
+                resposta("O nome não pode ser vazio.\n");
                 break;
             }
             if (buscar(raiz, nome) != NULL)
             {
-                resposta("O contato jï¿½ estï¿½ Cadastrado.\n");
+                resposta("O contato já está cadastrado.\n");
                 break;
             }
-            lerTexto("\nDigite o telefone do contato: ", telefone, sizeof(telefone));
-            lerTexto("\nDigite o email do contato: ", email, sizeof(email));
+            lerTelefone(telefone, sizeof(telefone));
+            lerEmail(email, sizeof(email));
             raiz = inserir(raiz, nome, telefone, email);
             break;
         case 2:
@@ -63,7 +68,7 @@ int main()
             No *encontrado = buscar(raiz, nome);
             if (encontrado == NULL)
             {
-                resposta("Contato nï¿½o encontrado.\n");
+                resposta("Contato não encontrado.\n");
             }
             else
             {
@@ -86,7 +91,7 @@ int main()
             }
             else
             {
-                resposta("Contato nï¿½o encontrado.\n");
+                resposta("Contato não encontrado.\n");
             }
             break;
         }
@@ -98,7 +103,7 @@ int main()
             printf("------ Programa Finalizado ------\n");
             break;
         default:
-            resposta("Escolha Invï¿½lida.\n");
+            resposta("Escolha Inválida.\n");
             break;
         }
     } while (escolha != 5);
@@ -129,6 +134,71 @@ void lerTexto(char *mensagem, char *destino, size_t tamanho)
         return;
     }
     destino[strcspn(destino, "\n")] = '\0';
+}
+
+int validarTelefone(char *telefone)
+{
+    char *modelo = "(DD) DDDDD-DDDD";
+    int i = 0;
+    for (i = 0; modelo[i] != '\0'; i++)
+    {
+        if (telefone[i] == '\0')
+        {
+            return 0;
+        }
+        if (modelo[i] == 'D')
+        {
+            if (!isdigit(telefone[i]))
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            if (telefone[i] != modelo[i])
+            {
+                return 0;
+            }
+        }
+    }
+    return telefone[i] == '\0';
+}
+
+int validarEmail(char *email)
+{
+    char *arroba = strchr(email, '@');
+
+    if (arroba == NULL || arroba == email || arroba[1] == '\0' || strchr(arroba + 1, '@') != NULL || strchr(email, ' ') != NULL || strchr(arroba + 1, '.') == NULL)
+    {
+        return 0;
+    }
+    return 1;
+}
+
+void lerTelefone(char *destino, size_t tamanho)
+{
+    system("cls");
+    do
+    {
+        lerTexto("Digite o telefone do contato (formato: (DD) DDDDD-DDDD): ", destino, tamanho);
+        if (!validarTelefone(destino))
+        {
+            resposta("Telefone inválido. Tente novamente.\n");
+        }
+    } while (!validarTelefone(destino));
+}
+
+void lerEmail(char *destino, size_t tamanho)
+{
+    system("cls");
+    do
+    {
+        lerTexto("Digite o email do contato: ", destino, tamanho);
+        if (!validarEmail(destino))
+        {
+            resposta("Email inválido. Tente novamente.\n");
+        }
+    } while (!validarEmail(destino));
 }
 
 void liberar(No *raiz)
@@ -164,7 +234,7 @@ No *inserir(No *raiz, char *nome, char *telefone, char *email)
         No *novo = criarNo(nome, telefone, email);
         if (novo == NULL)
         {
-            resposta("Erro na criaï¿½ï¿½o do Nï¿½.\n");
+            resposta("Erro na criação do Nó.\n");
             return NULL;
         }
         else
@@ -173,6 +243,7 @@ No *inserir(No *raiz, char *nome, char *telefone, char *email)
             return novo;
         }
     }
+
     int cmp = _stricmp(nome, raiz->nome);
 
     if (cmp < 0)
@@ -192,6 +263,7 @@ No *buscar(No *raiz, char *nome)
     {
         return NULL;
     }
+
     int cmp = _stricmp(nome, raiz->nome);
     if (cmp == 0)
     {
